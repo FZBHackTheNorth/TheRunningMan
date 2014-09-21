@@ -3,6 +3,11 @@ static Window *s_main_window;
 static TextLayer *s_pedo_layer;
 static TextLayer *s_count_layer;
 static TextLayer *s_time_layer;
+static BitmapLayer *s_bmap_layer;
+static GBitmap *mm1;
+static GBitmap *mm2;
+static GBitmap *mm3;
+static GBitmap *currBmap;
 
 // Timer used to determine next step check
 static AppTimer *timer;
@@ -110,6 +115,24 @@ void update_ui_callback() {
     static char buf[] = "123456890abcdefghijkl";
     snprintf(buf, sizeof(buf), "%ld", pedometerCount);
     text_layer_set_text(s_count_layer, buf);
+    
+    //Destroy old image if there is one, and update.
+    if (bitmap_layer_get_bitmap(s_bmap_layer) != NULL){
+      currBmap = bitmap_layer_get_bitmap(s_bmap_layer);
+    } else {
+      bitmap_layer_set_bitmap(s_bmap_layer, mm1);
+    }
+    
+    if (currBmap == mm1){
+      gbitmap_destroy(mm1);
+      bitmap_layer_set_bitmap(s_bmap_layer, mm1);
+    } else if (currBmap == mm2){
+      gbitmap_destroy(mm2);
+      bitmap_layer_set_bitmap(s_bmap_layer, mm3);      
+    } else if (currBmap == mm3){
+      gbitmap_destroy(mm3);
+      bitmap_layer_set_bitmap(s_bmap_layer, mm1);      
+    }     
   }
   resetUpdate();
 }
@@ -147,26 +170,30 @@ static void main_window_load(){
 
 
   //Create the layer for pedometer
-  s_pedo_layer = text_layer_create(GRect(0,100,144,35));
+  s_pedo_layer = text_layer_create(GRect(0,110,144,25));
   text_layer_set_background_color(s_pedo_layer, GColorBlack);
   text_layer_set_text_color(s_pedo_layer, GColorWhite);
   //Prettify the layout...
   text_layer_set_font(s_pedo_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
-  text_layer_set_text_alignment(s_pedo_layer, GTextAlignmentCentre);
+  text_layer_set_text_alignment(s_pedo_layer, GTextAlignmentCenter);
   //Set the text!
   text_layer_set_text(s_pedo_layer, "Step counts...");
 
-  s_count_layer = text_layer_create(GRect(0,135,144,35));
+  s_count_layer = text_layer_create(GRect(0,133,144,35));
   text_layer_set_background_color(s_count_layer, GColorClear);
   text_layer_set_text_color(s_count_layer, GColorBlack); 
   //Prettify the layout...
   text_layer_set_font(s_count_layer, fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
-  text_layer_set_text_alignment(s_count_layer, GTextAlignmentCentre);
+  text_layer_set_text_alignment(s_count_layer, GTextAlignmentCenter);
+  
+  s_bmap_layer = bitmap_layer_create(GRect(70,70,53,50));
   
   //add it to the windows root layer
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_time_layer));
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_pedo_layer));
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_count_layer));
+  layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_bmap_layer));
+  
 }
 
 static void main_window_unload(Window *Window){
@@ -177,6 +204,11 @@ static void main_window_unload(Window *Window){
 static void init(){
   accel_data_service_subscribe(0, NULL);
   s_main_window = window_create();
+  
+  mm1 = gbitmap_create_with_resource(res1);
+  mm2 = gbitmap_create_with_resource(res2);
+  mm3 = gbitmap_create_with_resource(res3);
+  
   timer = app_timer_register(ACCEL_STEP_MS, timer_callback, NULL);
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 
@@ -194,7 +226,11 @@ static void init(){
 }
 
 static void deinit(){
-  window_destroy(s_main_window);
+  gbitmap_destroy(mm1);
+  gbitmap_destroy(mm2);
+  gbitmap_destroy(mm3);
+  bitmap_layer_destroy(s_bmap_layer);
+  window_destroy(s_main_window);  
 }
 
 int main(void){

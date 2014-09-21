@@ -1,0 +1,35 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "briansobrian@gmail.com",
+    "longName": "WatchFace",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "resources/images/frame_002.png",
+                "name": "res3",
+                "type": "png"
+            },
+            {
+                "file": "resources/images/frame_003.png",
+                "name": "res2",
+                "type": "png"
+            },
+            {
+                "file": "resources/images/frame_000.png",
+                "name": "res1",
+                "type": "png"
+            }
+        ]
+    },
+    "shortName": "WatchFace",
+    "uuid": "28755f84-a244-4cdb-926a-a514292aef5c",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
