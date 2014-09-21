@@ -151,8 +151,8 @@ static void main_window_load(){
   text_layer_set_background_color(s_pedo_layer, GColorBlack);
   text_layer_set_text_color(s_pedo_layer, GColorWhite);
   //Prettify the layout...
-  text_layer_set_font(s_pedo_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD));
-  text_layer_set_text_alignment(s_pedo_layer, GTextAlignmentLeft);
+  text_layer_set_font(s_pedo_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
+  text_layer_set_text_alignment(s_pedo_layer, GTextAlignmentCentre);
   //Set the text!
   text_layer_set_text(s_pedo_layer, "Step counts...");
 
@@ -161,7 +161,7 @@ static void main_window_load(){
   text_layer_set_text_color(s_count_layer, GColorBlack); 
   //Prettify the layout...
   text_layer_set_font(s_count_layer, fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
-  text_layer_set_text_alignment(s_count_layer, GTextAlignmentRight);
+  text_layer_set_text_alignment(s_count_layer, GTextAlignmentCentre);
   
   //add it to the windows root layer
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_time_layer));
