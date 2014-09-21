@@ -192,7 +192,7 @@ static void main_window_load(){
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_time_layer));
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_pedo_layer));
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_count_layer));
-  layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_bmap_layer));
+  layer_add_child(window_get_root_layer(s_main_window), bitmap_layer_get_layer(s_bmap_layer));
   
 }
 
