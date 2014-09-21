@@ -64,8 +64,6 @@ static void init(){
   	.unload = main_window_unload
   });
 
-  window_set_window_handlers()
-
   //Show window on the watch... with animated = true
   window_stack_push(s_main_window, true);
 
