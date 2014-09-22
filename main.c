@@ -20,7 +20,7 @@ int YZ_DELTA_MAX = 195;
 int X_DELTA_TEMP, Y_DELTA_TEMP, Z_DELTA_TEMP = 0;
 int lastX, lastY, lastZ, currX, currY, currZ = 0;
 int sensitivity = 1;
-
+int mmDim[4] = {0,60,144,50};
 long pedometerCount = 0;
 
 bool did_pebble_vibrate = false;
@@ -115,24 +115,36 @@ void update_ui_callback() {
 
     static char buf[] = "123456890abcdefghijkl";
     snprintf(buf, sizeof(buf), "%ld", pedometerCount);
-    text_layer_set_text(s_count_layer, buf);
-    
+    text_layer_set_text(s_count_layer, buf);     
     //Destroy old image if there is one, and update.
-    if (bitmap_layer_get_bitmap(s_bmap_layer) != NULL){
-      const GBitmap *currBmap = bitmap_layer_get_bitmap(s_bmap_layer);
-      if (currBmap == mm1){
-        gbitmap_destroy(mm1);
-        bitmap_layer_set_bitmap(s_bmap_layer, mm1);
-      } else if (currBmap == mm2){
-        gbitmap_destroy(mm2);
-        bitmap_layer_set_bitmap(s_bmap_layer, mm3);      
-      } else if (currBmap == mm3){
-        gbitmap_destroy(mm3);
-        bitmap_layer_set_bitmap(s_bmap_layer, mm1);      
-      }        
-    } else {
-      bitmap_layer_set_bitmap(s_bmap_layer, mm1);
-    }
+    const GBitmap *currBmap = bitmap_layer_get_bitmap(s_bmap_layer);    
+//     APP_LOG(APP_LOG_LEVEL_INFO, currBmap);
+//     console.log("updating the callback...");
+//     console.log(currBmap);    
+//     gbitmap_destroy(mm1);
+    if (currBmap == mm1){
+//       gbitmap_destroy(mm1);
+      APP_LOG(APP_LOG_LEVEL_INFO , "Currently mm1.");      
+      bitmap_layer_destroy(s_bmap_layer);
+      s_bmap_layer = bitmap_layer_create(GRect(mmDim[0],mmDim[1],mmDim[2],mmDim[3]));
+      layer_add_child(window_get_root_layer(s_main_window), bitmap_layer_get_layer(s_bmap_layer));      
+      bitmap_layer_set_bitmap(s_bmap_layer, mm2);
+    } else if (currBmap == mm2){
+//       gbitmap_destroy(mm2);
+      APP_LOG(APP_LOG_LEVEL_INFO , "Currently mm2.");
+      bitmap_layer_destroy(s_bmap_layer);
+      s_bmap_layer = bitmap_layer_create(GRect(mmDim[0],mmDim[1],mmDim[2],mmDim[3]));
+      layer_add_child(window_get_root_layer(s_main_window), bitmap_layer_get_layer(s_bmap_layer));
+      bitmap_layer_set_bitmap(s_bmap_layer, mm3);      
+    } else if ((currBmap == mm3)  || (currBmap == NULL)){
+//       gbitmap_destroy(mm3);
+      APP_LOG(APP_LOG_LEVEL_INFO , "Currently mm3.");
+      bitmap_layer_destroy(s_bmap_layer);
+      s_bmap_layer = bitmap_layer_create(GRect(mmDim[0],mmDim[1],mmDim[2],mmDim[3]));
+      layer_add_child(window_get_root_layer(s_main_window), bitmap_layer_get_layer(s_bmap_layer));
+      bitmap_layer_set_bitmap(s_bmap_layer, mm1);      
+    }        
+
   }
   resetUpdate();
 }
@@ -186,13 +198,14 @@ static void main_window_load(){
   text_layer_set_font(s_count_layer, fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
   text_layer_set_text_alignment(s_count_layer, GTextAlignmentCenter);
   
-  s_bmap_layer = bitmap_layer_create(GRect(70,70,53,50));
+  s_bmap_layer = bitmap_layer_create(GRect(mmDim[0],mmDim[1],mmDim[2],mmDim[3]));
   
   //add it to the windows root layer
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_time_layer));
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_pedo_layer));
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_count_layer));
   layer_add_child(window_get_root_layer(s_main_window), bitmap_layer_get_layer(s_bmap_layer));
+  
   
 }
 
