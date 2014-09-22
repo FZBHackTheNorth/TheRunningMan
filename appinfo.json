@@ -9,18 +9,18 @@
     "resources": {
         "media": [
             {
-                "file": "resources/images/frame_002.png",
-                "name": "res3",
+                "file": "images/mm3.png",
+                "name": "mm3id",
                 "type": "png"
             },
             {
-                "file": "resources/images/frame_003.png",
-                "name": "res2",
+                "file": "images/mm2.png",
+                "name": "mm2id",
                 "type": "png"
             },
             {
-                "file": "resources/images/frame_000.png",
-                "name": "res1",
+                "file": "images/mm1.png",
+                "name": "mm1id",
                 "type": "png"
             }
         ]
