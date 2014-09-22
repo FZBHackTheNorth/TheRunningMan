@@ -7,7 +7,8 @@ static BitmapLayer *s_bmap_layer;
 static GBitmap *mm1;
 static GBitmap *mm2;
 static GBitmap *mm3;
-static GBitmap *currBmap;
+
+// const static GBitmap *currBmap;
 
 // Timer used to determine next step check
 static AppTimer *timer;
@@ -118,21 +119,20 @@ void update_ui_callback() {
     
     //Destroy old image if there is one, and update.
     if (bitmap_layer_get_bitmap(s_bmap_layer) != NULL){
-      currBmap = bitmap_layer_get_bitmap(s_bmap_layer);
+      const GBitmap *currBmap = bitmap_layer_get_bitmap(s_bmap_layer);
+      if (currBmap == mm1){
+        gbitmap_destroy(mm1);
+        bitmap_layer_set_bitmap(s_bmap_layer, mm1);
+      } else if (currBmap == mm2){
+        gbitmap_destroy(mm2);
+        bitmap_layer_set_bitmap(s_bmap_layer, mm3);      
+      } else if (currBmap == mm3){
+        gbitmap_destroy(mm3);
+        bitmap_layer_set_bitmap(s_bmap_layer, mm1);      
+      }        
     } else {
       bitmap_layer_set_bitmap(s_bmap_layer, mm1);
     }
-    
-    if (currBmap == mm1){
-      gbitmap_destroy(mm1);
-      bitmap_layer_set_bitmap(s_bmap_layer, mm1);
-    } else if (currBmap == mm2){
-      gbitmap_destroy(mm2);
-      bitmap_layer_set_bitmap(s_bmap_layer, mm3);      
-    } else if (currBmap == mm3){
-      gbitmap_destroy(mm3);
-      bitmap_layer_set_bitmap(s_bmap_layer, mm1);      
-    }     
   }
   resetUpdate();
 }
@@ -205,9 +205,9 @@ static void init(){
   accel_data_service_subscribe(0, NULL);
   s_main_window = window_create();
   
-  mm1 = gbitmap_create_with_resource(res1);
-  mm2 = gbitmap_create_with_resource(res2);
-  mm3 = gbitmap_create_with_resource(res3);
+  mm1 = gbitmap_create_with_resource(RESOURCE_ID_mm1id);
+  mm2 = gbitmap_create_with_resource(RESOURCE_ID_mm2id);
+  mm3 = gbitmap_create_with_resource(RESOURCE_ID_mm3id);
   
   timer = app_timer_register(ACCEL_STEP_MS, timer_callback, NULL);
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
